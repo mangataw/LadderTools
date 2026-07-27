@@ -1,0 +1,23 @@
+# AI 服务相关专用代理规则
+
+# OpenAI
+DOMAIN-SUFFIX,chatgpt.com
+DOMAIN-SUFFIX,openai.com
+DOMAIN-SUFFIX,oaistatic.com
+DOMAIN-KEYWORD,openai
+
+# Microsoft Copilot / Bing AI
+DOMAIN-SUFFIX,bing.com
+DOMAIN,copilot.microsoft.com
+DOMAIN,location.microsoft.com
+
+# Claude
+DOMAIN-SUFFIX,claude.ai
+DOMAIN-SUFFIX,anthropic.com
+
+# Gemini
+DOMAIN-KEYWORD,gemini
+DOMAIN-SUFFIX,googleapis.com
+
+# Manus
+DOMAIN-SUFFIX,manus.im

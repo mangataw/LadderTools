@@ -1,0 +1,26 @@
+# Local Codex workspace metadata
+.agents/
+.codex/
+
+# Editor and IDE settings
+.idea/
+.vscode/
+*.code-workspace
+*.swp
+*.swo
+*~
+
+# Operating system metadata
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Temporary files, logs, and local overrides
+*.tmp
+*.temp
+*.log
+*.bak
+*.local
+.env
+.env.*
+
