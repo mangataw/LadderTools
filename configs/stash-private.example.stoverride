@@ -1,0 +1,15 @@
+# 使用方法：
+# 1. 复制为 stash-private.stoverride（该文件已被 .gitignore 忽略）。
+# 2. 将下方占位 URL 替换为私人订阅或自建转换服务地址。
+# 3. 在 Stash 的覆写页面导入并启用；无需由公开 stash.yaml 引用此文件。
+# 字典会按同名 provider 递归合并，因此不需要使用 #!replace。
+# 请勿提交或公开填写真实 URL 后的文件。
+
+name: LadderTools 私有订阅
+desc: 为公开的 stash.yaml 注入本地私人订阅地址
+
+proxy-providers:
+  # 名称必须与 stash.yaml 中的 subscription 完全一致。
+  subscription:
+    # 必须返回 Clash/Stash YAML，并包含顶层 proxies 字段。
+    url: https://example.com/replace-with-your-private-subscription.yaml

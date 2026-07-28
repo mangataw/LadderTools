@@ -24,3 +24,5 @@ Desktop.ini
 .env
 .env.*
 
+# Private Stash subscription override
+configs/stash-private.stoverride

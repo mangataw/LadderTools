@@ -1,0 +1,611 @@
+# LadderTools Stash 配置
+# 基于 configs/openclash.ini 转换。
+# 此公开配置不保存私人订阅地址。
+# 请在 Stash 中另外启用本地私有覆写文件，参考 stash-private.example.stoverride。
+# subscription provider 也可指向自建转换服务；返回内容必须包含顶层 proxies 字段。
+# 规则集和代理分组的引用顺序与 openclash.ini 保持一致，请勿随意调整。
+
+mode: rule
+log-level: info
+
+# 代理提供器仅声明公开参数和本地缓存路径。
+# 私人 URL 通过同名 subscription provider 的本地覆写递归合并。
+proxy-providers:
+  subscription:
+    # Stash 管理的 provider 缓存位置；未注入 URL 时只会读取已有本地缓存。
+    path: ./providers/subscription.yaml
+    # 注入 URL 后，每小时检查一次代理集更新。
+    interval: 3600
+    benchmark-url: https://www.gstatic.com/generate_204
+    benchmark-timeout: 5
+
+proxy-groups:
+  # 主选择、手动选择和全节点自动测速组。
+  - name: 节点选择
+    type: select
+    proxies:
+      - 自动选择
+      - 香港节点
+      - 日本节点
+      - 台湾节点
+      - 美国节点
+      - 狮城节点
+      - 手动切换节点
+      - 手动切换分组
+      - DIRECT
+
+  - name: 手动切换节点
+    type: select
+    use:
+      - subscription
+
+  - name: 手动切换分组
+    type: select
+    proxies:
+      - 香港节点
+      - 日本节点
+      - 美国节点
+      - 台湾节点
+      - 狮城节点
+      - 韩国节点
+      - 澳洲节点
+      - 德国节点
+      - 荷兰节点
+      - 英国节点
+      - 爱沙节点
+      - DIRECT
+
+  - name: 自动选择
+    type: url-test
+    use:
+      - subscription
+    interval: 600
+
+  # 地区测速组通过节点名称正则实时筛选 subscription provider。
+  - name: 香港节点
+    type: url-test
+    use:
+      - subscription
+    filter: '香港|港|HK|Hong Kong|HongKong'
+    interval: 600
+
+  - name: 日本节点
+    type: url-test
+    use:
+      - subscription
+    filter: '日本|东京|大阪|埼玉|JP|Japan'
+    interval: 600
+
+  - name: 美国节点
+    type: url-test
+    use:
+      - subscription
+    filter: '美国|美西|美东|波特兰|达拉斯|俄勒冈|凤凰城|费利蒙|硅谷|拉斯维加斯|洛杉矶|圣何塞|圣克拉拉|西雅图|芝加哥|US|USA|United States'
+    interval: 600
+
+  - name: 台湾节点
+    type: url-test
+    use:
+      - subscription
+    filter: '台湾|台北|新北|彰化|TW|Taiwan'
+    interval: 600
+
+  - name: 狮城节点
+    type: url-test
+    use:
+      - subscription
+    filter: '新加坡|狮城|SG|Singapore'
+    interval: 600
+
+  - name: 韩国节点
+    type: url-test
+    use:
+      - subscription
+    filter: '韩国|首尔|KR|Korea|KOR|韓國'
+    interval: 600
+
+  - name: 澳洲节点
+    type: url-test
+    use:
+      - subscription
+    filter: '澳大利亚|澳洲|AU|Australia|AUS'
+    interval: 600
+
+  - name: 德国节点
+    type: url-test
+    use:
+      - subscription
+    filter: '德国|DE|Germany|Deutschland|GER'
+    interval: 600
+
+  - name: 荷兰节点
+    type: url-test
+    use:
+      - subscription
+    filter: '荷兰|NL|Netherlands|Holland'
+    interval: 600
+
+  - name: 英国节点
+    type: url-test
+    use:
+      - subscription
+    filter: '英国|UK|England|GB|GBR'
+    interval: 600
+
+  - name: 爱沙节点
+    type: url-test
+    use:
+      - subscription
+    filter: '爱沙尼亚|EE|Estonia|EST'
+    interval: 600
+
+  - name: 非日节点
+    type: url-test
+    use:
+      - subscription
+    filter: '^(?!.*(日本|东京|大阪|埼玉|JP|Japan|jp|japan)).*$'
+    interval: 600
+
+  # 默认代理服务与媒体策略组。
+  - name: AI
+    type: select
+    proxies:
+      - 日本节点
+      - 美国节点
+      - 狮城节点
+      - 澳洲节点
+      - 德国节点
+
+  - name: 电报消息
+    type: select
+    proxies:
+      - 香港节点
+      - 节点选择
+      - 狮城节点
+      - 台湾节点
+      - 日本节点
+      - 美国节点
+      - 韩国节点
+      - 手动切换分组
+      - DIRECT
+
+  - name: 游戏平台
+    type: select
+    proxies:
+      - 美国节点
+      - 日本节点
+      - 节点选择
+      - 香港节点
+      - 台湾节点
+      - 狮城节点
+      - 韩国节点
+      - 手动切换分组
+      - DIRECT
+
+  - name: 油管视频
+    type: select
+    proxies:
+      - 节点选择
+      - 狮城节点
+      - 香港节点
+      - 台湾节点
+      - 日本节点
+      - 美国节点
+      - 韩国节点
+      - 手动切换分组
+      - DIRECT
+
+  - name: 奈飞节点
+    type: select
+    use:
+      - subscription
+    filter: 'NF|奈飞|解锁|Netflix|NETFLIX|Media'
+
+  - name: 奈飞视频
+    type: select
+    proxies:
+      - 奈飞节点
+      - 节点选择
+      - 狮城节点
+      - 香港节点
+      - 台湾节点
+      - 日本节点
+      - 美国节点
+      - 韩国节点
+      - 手动切换分组
+      - DIRECT
+
+  - name: 巴哈姆特
+    type: select
+    proxies:
+      - 台湾节点
+      - 节点选择
+      - 手动切换分组
+      - DIRECT
+
+  - name: 国外媒体
+    type: select
+    proxies:
+      - 节点选择
+      - 香港节点
+      - 台湾节点
+      - 狮城节点
+      - 日本节点
+      - 美国节点
+      - 韩国节点
+      - 手动切换分组
+      - DIRECT
+
+  # 默认直连优先的系统服务策略组。
+  - name: 谷歌FCM
+    type: select
+    proxies:
+      - DIRECT
+      - 节点选择
+      - 美国节点
+      - 香港节点
+      - 台湾节点
+      - 狮城节点
+      - 日本节点
+      - 韩国节点
+      - 手动切换分组
+
+  - name: 微软云盘
+    type: select
+    proxies:
+      - DIRECT
+      - 节点选择
+      - 美国节点
+      - 香港节点
+      - 台湾节点
+      - 狮城节点
+      - 日本节点
+      - 韩国节点
+      - 手动切换分组
+
+  - name: 微软服务
+    type: select
+    proxies:
+      - DIRECT
+      - 节点选择
+      - 美国节点
+      - 香港节点
+      - 台湾节点
+      - 狮城节点
+      - 日本节点
+      - 韩国节点
+      - 手动切换分组
+
+  - name: 苹果服务
+    type: select
+    proxies:
+      - DIRECT
+      - 节点选择
+      - 美国节点
+      - 香港节点
+      - 台湾节点
+      - 狮城节点
+      - 日本节点
+      - 韩国节点
+      - 手动切换分组
+
+  # 国内服务与直连策略组。
+  - name: 网易音乐
+    type: select
+    proxies:
+      - DIRECT
+      - 节点选择
+    use:
+      - subscription
+    filter: '网易|音乐|解锁|Music|NetEase'
+
+  - name: 哔哩哔哩
+    type: select
+    proxies:
+      - DIRECT
+      - 节点选择
+      - 台湾节点
+      - 香港节点
+      - 手动切换分组
+
+  - name: 国内媒体
+    type: select
+    proxies:
+      - DIRECT
+      - 节点选择
+      - 香港节点
+      - 台湾节点
+      - 狮城节点
+      - 日本节点
+      - 手动切换分组
+
+  - name: 全球直连
+    type: select
+    proxies:
+      - DIRECT
+      - 节点选择
+      - 手动切换分组
+
+  # 拦截及最终兜底策略组。
+  - name: 广告拦截
+    type: select
+    proxies:
+      - REJECT
+      - DIRECT
+
+  - name: 应用净化
+    type: select
+    proxies:
+      - REJECT
+      - DIRECT
+
+  - name: 漏网之鱼
+    type: select
+    proxies:
+      - DIRECT
+      - 节点选择
+      - 香港节点
+      - 台湾节点
+      - 狮城节点
+      - 日本节点
+      - 美国节点
+      - 韩国节点
+      - 手动切换分组
+
+# Stash 推荐将内容明确的纯域名/IP集合声明为 domain/ipcidr。
+# 未明确或包含多种 Clash 规则的集合使用兼容性更高的 classical。
+# 所有远程规则文件均为逐行文本格式，因此统一声明 format: text。
+rule-providers:
+  custom-direct:
+    behavior: classical
+    format: text
+    url: https://raw.githubusercontent.com/mangataw/LadderTools/main/rules/proxy_direct.list
+    path: ./rules/custom-direct.list
+    interval: 86400
+
+  custom-ai:
+    behavior: classical
+    format: text
+    url: https://raw.githubusercontent.com/mangataw/LadderTools/main/rules/proxy_ai.list
+    path: ./rules/custom-ai.list
+    interval: 86400
+
+  custom-us:
+    behavior: classical
+    format: text
+    url: https://raw.githubusercontent.com/mangataw/LadderTools/main/rules/proxy_us.list
+    path: ./rules/custom-us.list
+    interval: 86400
+
+  custom-japan:
+    behavior: classical
+    format: text
+    url: https://raw.githubusercontent.com/mangataw/LadderTools/main/rules/proxy_japan.list
+    path: ./rules/custom-japan.list
+    interval: 86400
+
+  custom-not-japan:
+    behavior: classical
+    format: text
+    url: https://raw.githubusercontent.com/mangataw/LadderTools/main/rules/proxy_japan_not.list
+    path: ./rules/custom-not-japan.list
+    interval: 86400
+
+  custom-proxy:
+    behavior: classical
+    format: text
+    url: https://raw.githubusercontent.com/mangataw/LadderTools/main/rules/proxy.list
+    path: ./rules/custom-proxy.list
+    interval: 86400
+
+  ai:
+    behavior: classical
+    format: text
+    url: https://raw.githubusercontent.com/iab0x00/ProxyRules/main/Rule/AI.txt
+    path: ./rules/ai.list
+    interval: 86400
+
+  telegram:
+    behavior: classical
+    format: text
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Telegram/Telegram.list
+    path: ./rules/telegram.list
+    interval: 86400
+
+  telegram-cidr:
+    behavior: ipcidr
+    format: text
+    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/telegramcidr.txt
+    path: ./rules/telegram-cidr.txt
+    interval: 86400
+
+  game:
+    behavior: classical
+    format: text
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Game/Game.list
+    path: ./rules/game.list
+    interval: 86400
+
+  onedrive:
+    behavior: classical
+    format: text
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/OneDrive/OneDrive.list
+    path: ./rules/onedrive.list
+    interval: 86400
+
+  microsoft:
+    behavior: classical
+    format: text
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Microsoft/Microsoft.list
+    path: ./rules/microsoft.list
+    interval: 86400
+
+  apple:
+    behavior: classical
+    format: text
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Apple/Apple.list
+    path: ./rules/apple.list
+    interval: 86400
+
+  google-fcm:
+    behavior: classical
+    format: text
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/GoogleFCM/GoogleFCM.list
+    path: ./rules/google-fcm.list
+    interval: 86400
+
+  youtube:
+    behavior: classical
+    format: text
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/YouTube/YouTube.list
+    path: ./rules/youtube.list
+    interval: 86400
+
+  netflix:
+    behavior: classical
+    format: text
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Netflix/Netflix.list
+    path: ./rules/netflix.list
+    interval: 86400
+
+  bahamut:
+    behavior: classical
+    format: text
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/Bahamut/Bahamut.list
+    path: ./rules/bahamut.list
+    interval: 86400
+
+  global-media:
+    behavior: classical
+    format: text
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/GlobalMedia/GlobalMedia.list
+    path: ./rules/global-media.list
+    interval: 86400
+
+  proxy-domain:
+    behavior: domain
+    format: text
+    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/proxy.txt
+    path: ./rules/proxy-domain.txt
+    interval: 86400
+
+  proxy-gfw:
+    behavior: classical
+    format: text
+    url: https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ProxyGFWlist.list
+    path: ./rules/proxy-gfw.list
+    interval: 86400
+
+  ad:
+    behavior: classical
+    format: text
+    url: https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/BanAD.list
+    path: ./rules/ad.list
+    interval: 86400
+
+  program-ad:
+    behavior: classical
+    format: text
+    url: https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/BanProgramAD.list
+    path: ./rules/program-ad.list
+    interval: 86400
+
+  netease-music:
+    behavior: classical
+    format: text
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/NetEaseMusic/NetEaseMusic.list
+    path: ./rules/netease-music.list
+    interval: 86400
+
+  bilibili:
+    behavior: classical
+    format: text
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/BiliBili/BiliBili.list
+    path: ./rules/bilibili.list
+    interval: 86400
+
+  china-media:
+    behavior: classical
+    format: text
+    url: https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash/ChinaMedia/ChinaMedia.list
+    path: ./rules/china-media.list
+    interval: 86400
+
+  china-domain:
+    behavior: classical
+    format: text
+    url: https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ChinaDomain.list
+    path: ./rules/china-domain.list
+    interval: 86400
+
+  china-company-ip:
+    behavior: classical
+    format: text
+    url: https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ChinaCompanyIp.list
+    path: ./rules/china-company-ip.list
+    interval: 86400
+
+  download:
+    behavior: classical
+    format: text
+    url: https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Download.list
+    path: ./rules/download.list
+    interval: 86400
+
+  private-domain:
+    behavior: domain
+    format: text
+    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/private.txt
+    path: ./rules/private-domain.txt
+    interval: 86400
+
+  applications:
+    behavior: classical
+    format: text
+    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/applications.txt
+    path: ./rules/applications.txt
+    interval: 86400
+
+  china-cidr:
+    behavior: ipcidr
+    format: text
+    url: https://raw.githubusercontent.com/Loyalsoldier/clash-rules/release/cncidr.txt
+    path: ./rules/china-cidr.txt
+    interval: 86400
+
+# 规则顺序与 openclash.ini 的有效 ruleset 行严格一致，按从上到下顺序匹配。
+# IP 规则集合使用 no-resolve，最终兜底采用 Stash/Clash YAML 推荐的 MATCH。
+rules:
+  - RULE-SET,custom-direct,全球直连
+  - RULE-SET,custom-ai,AI
+  - RULE-SET,custom-us,美国节点
+  - RULE-SET,custom-japan,日本节点
+  - RULE-SET,custom-not-japan,非日节点
+  - RULE-SET,custom-proxy,节点选择
+  - RULE-SET,ai,AI
+  - RULE-SET,telegram,电报消息
+  - RULE-SET,telegram-cidr,电报消息,no-resolve
+  - RULE-SET,game,游戏平台
+  - RULE-SET,onedrive,微软云盘
+  - RULE-SET,microsoft,微软服务
+  - RULE-SET,apple,苹果服务
+  - RULE-SET,google-fcm,谷歌FCM
+  - RULE-SET,youtube,油管视频
+  - RULE-SET,netflix,奈飞视频
+  - RULE-SET,bahamut,巴哈姆特
+  - RULE-SET,global-media,国外媒体
+  - RULE-SET,proxy-domain,节点选择
+  - RULE-SET,proxy-gfw,节点选择
+  - RULE-SET,ad,广告拦截
+  - RULE-SET,program-ad,应用净化
+  - RULE-SET,netease-music,网易音乐
+  - RULE-SET,bilibili,哔哩哔哩
+  - RULE-SET,china-media,国内媒体
+  - RULE-SET,china-domain,全球直连
+  - RULE-SET,china-company-ip,全球直连
+  - RULE-SET,download,全球直连
+  - RULE-SET,private-domain,全球直连
+  - RULE-SET,applications,全球直连
+  - RULE-SET,china-cidr,全球直连,no-resolve
+  - GEOIP,CN,全球直连,no-resolve
+  - MATCH,漏网之鱼
