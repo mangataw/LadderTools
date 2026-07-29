@@ -1,9 +1,9 @@
 # LadderTools Stash 配置
-# 基于 configs/openclash.ini 转换。
+# 基于 configs/clash.ini 转换。
 # 此公开配置不保存私人订阅地址。
 # 请在 Stash 中另外启用本地私有覆写文件，参考 stash-private.example.stoverride。
 # subscription provider 也可指向自建转换服务；返回内容必须包含顶层 proxies 字段。
-# 规则集和代理分组的引用顺序与 openclash.ini 保持一致，请勿随意调整。
+# 规则集和代理分组的引用顺序与 clash.ini 保持一致，请勿随意调整。
 
 mode: rule
 log-level: info
@@ -573,7 +573,7 @@ rule-providers:
     path: ./rules/china-cidr.txt
     interval: 86400
 
-# 规则顺序与 openclash.ini 的有效 ruleset 行严格一致，按从上到下顺序匹配。
+# 规则顺序与 clash.ini 的有效 ruleset 行严格一致，按从上到下顺序匹配。
 # IP 规则集合使用 no-resolve，最终兜底采用 Stash/Clash YAML 推荐的 MATCH。
 rules:
   - RULE-SET,custom-direct,全球直连
