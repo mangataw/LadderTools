@@ -1,2 +1,5 @@
 # 通用代理兜底规则，使用默认代理线路
 DOMAIN-SUFFIX,pixlr.com
+#土区礼品卡商城
+DOMAIN-SUFFIX,oyunfor.com
+DOMAIN-SUFFIX,paytr.com
