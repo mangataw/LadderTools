@@ -1,0 +1,16 @@
+# LadderTools Stash 私人订阅配置示例
+# 本文件只示范如何将一个私人订阅包装为 proxy-provider，不包含固定分组和规则。
+# 实际使用时请复制到本机或 Stash/iCloud，再替换下方 URL；不要提交真实订阅地址。
+# 在 Stash 中同时启用公开的 stash-policy.stoverride，即可应用统一的分组和规则。
+# 如订阅 URL 本身可被 Stash 直接导入为配置，也可以不使用本示例。
+# 订阅返回的 Clash/Stash YAML 必须包含顶层 proxies 字段。
+
+mode: rule
+log-level: info
+
+proxy-providers:
+  subscription:
+    url: https://example.com/replace-with-your-private-subscription.yaml
+    interval: 3600
+    benchmark-url: https://www.gstatic.com/generate_204
+    benchmark-timeout: 5
