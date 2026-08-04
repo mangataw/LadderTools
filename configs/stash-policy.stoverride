@@ -482,6 +482,13 @@ rule-providers: #!replace
     path: ./rules/proxy-gfw.list
     interval: 86400
 
+  awavenue-ad:
+    behavior: classical
+    format: text
+    url: https://raw.githubusercontent.com/TG-Twilight/AWAvenue-Ads-Rule/main/Filters/AWAvenue-Ads-Rule-Surge-RULE-SET-Only.Ads.list
+    path: ./rules/awavenue-ad.list
+    interval: 86400
+
   ad:
     behavior: classical
     format: text
@@ -589,6 +596,7 @@ rules: #!replace
   - RULE-SET,netflix,奈飞视频
   - RULE-SET,bahamut,巴哈姆特
   - RULE-SET,global-media,国外媒体
+  - RULE-SET,awavenue-ad,广告拦截
   - RULE-SET,ad,广告拦截
   - RULE-SET,program-ad,应用净化
   - RULE-SET,lan,全球直连
