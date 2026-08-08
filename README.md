@@ -11,7 +11,6 @@ LadderTools/
 ├─ configs/
 │  ├─ clash.ini                  # 推荐：通用 subconverter 转换模板
 │  ├─ clash-multi-sub.ini        # 三订阅来源隔离的 subconverter 模板
-│  ├─ openclash_acl4ssr.ini      # 旧版：ACL4SSR 风格兼容模板
 │  ├─ stash.yaml                 # Stash 私人订阅包装示例
 │  ├─ stash-policy.stoverride    # Stash 策略组及规则覆写
 │  └─ shadowrocket.conf          # Shadowrocket 完整公共配置
@@ -25,13 +24,10 @@ LadderTools/
 | --- | --- | --- | --- | --- |
 | `configs/clash.ini` | subconverter 模板 | 将私人订阅转换成 Clash/OpenClash 或 Stash YAML | 否，节点由转换请求的 `url` 传入 | 推荐 |
 | `configs/clash-multi-sub.ini` | 多订阅 subconverter 模板 | 使用 `default/premium/budget` 三个 tag 合并订阅，并按来源建立独立策略组 | 否，订阅由转换请求的 `url` 传入 | 推荐 |
-| `configs/openclash_acl4ssr.ini` | 旧版 subconverter 模板 | 需要保留 ACL4SSR 风格分组名称和行为的旧配置 | 否 | 仅兼容旧部署 |
 | `configs/stash.yaml` | Stash 基础 YAML 示例 | 把一个私人订阅包装成 `proxy-provider`，再叠加覆写 | 否，仅含占位订阅 URL | 推荐给不使用订阅转换的 Stash 用户 |
 | `configs/stash-policy.stoverride` | Stash Override | 给已有 Stash 配置统一替换策略组、规则提供器和规则 | 否，复用原配置的 `proxies`/`proxy-providers` | 推荐 |
 | `configs/shadowrocket.conf` | Shadowrocket 配置 | iOS/iPadOS Shadowrocket 远程配置或本地导入 | 否，节点订阅需另加 | 推荐 |
 | `rules/*.list` | Clash classical/规则集文本 | 由以上配置远程引用，也可被兼容客户端单独引用 | 不适用 | 配套文件，不是完整配置 |
-
-`openclash_acl4ssr.ini` 是历史兼容版本，分组命名、测速参数和规则来源均与当前 `clash.ini` 不完全一致，且文件中的旧编码文本在部分编辑器中会显示乱码。新部署应优先使用 `clash.ini`。
 
 ## 快速开始
 
