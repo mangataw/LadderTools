@@ -10,6 +10,7 @@ LadderTools 是一组面向 Clash/OpenClash、Stash 和 Shadowrocket 的分流�
 LadderTools/
 ├─ configs/
 │  ├─ clash.ini                  # 推荐：通用 subconverter 转换模板
+│  ├─ clash-multi-sub.ini        # 三订阅来源隔离的 subconverter 模板
 │  ├─ openclash_acl4ssr.ini      # 旧版：ACL4SSR 风格兼容模板
 │  ├─ stash.yaml                 # Stash 私人订阅包装示例
 │  ├─ stash-policy.stoverride    # Stash 策略组及规则覆写
@@ -23,6 +24,7 @@ LadderTools/
 | 文件 | 类型 | 适用客户端/场景 | 是否含节点 | 推荐程度 |
 | --- | --- | --- | --- | --- |
 | `configs/clash.ini` | subconverter 模板 | 将私人订阅转换成 Clash/OpenClash 或 Stash YAML | 否，节点由转换请求的 `url` 传入 | 推荐 |
+| `configs/clash-multi-sub.ini` | 多订阅 subconverter 模板 | 使用 `default/premium/budget` 三个 tag 合并订阅，并按来源建立独立策略组 | 否，订阅由转换请求的 `url` 传入 | 推荐 |
 | `configs/openclash_acl4ssr.ini` | 旧版 subconverter 模板 | 需要保留 ACL4SSR 风格分组名称和行为的旧配置 | 否 | 仅兼容旧部署 |
 | `configs/stash.yaml` | Stash 基础 YAML 示例 | 把一个私人订阅包装成 `proxy-provider`，再叠加覆写 | 否，仅含占位订阅 URL | 推荐给不使用订阅转换的 Stash 用户 |
 | `configs/stash-policy.stoverride` | Stash Override | 给已有 Stash 配置统一替换策略组、规则提供器和规则 | 否，复用原配置的 `proxies`/`proxy-providers` | 推荐 |
