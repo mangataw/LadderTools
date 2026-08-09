@@ -23,7 +23,7 @@ LadderTools/
 | 文件 | 类型 | 适用客户端/场景 | 是否含节点 | 推荐程度 |
 | --- | --- | --- | --- | --- |
 | `configs/clash.ini` | subconverter 模板 | 将私人订阅转换成 Clash/OpenClash 或 Stash YAML | 否，节点由转换请求的 `url` 传入 | 推荐 |
-| `configs/clash-multi-sub.ini` | SubConverter-Extended 多订阅模板 | 使用 `default/premium/budget` 三个 provider 合并订阅，并按来源建立独立策略组 | 否，订阅由客户端根据生成的 `proxy-providers` 拉取 | 推荐 |
+| `configs/clash-multi-sub.ini` | SubConverter-Extended 多订阅模板 | 使用 `sub-default/sub-premium/sub-budget` 三个 provider 合并订阅，并按来源建立独立策略组 | 否，订阅由客户端根据生成的 `proxy-providers` 拉取 | 推荐 |
 | `configs/stash.yaml` | Stash 基础 YAML 示例 | 把一个私人订阅包装成 `proxy-provider`，再叠加覆写 | 否，仅含占位订阅 URL | 推荐给不使用订阅转换的 Stash 用户 |
 | `configs/stash-policy.stoverride` | Stash Override | 给已有 Stash 配置统一替换策略组、规则提供器和规则 | 否，复用原配置的 `proxies`/`proxy-providers` | 推荐 |
 | `configs/shadowrocket.conf` | Shadowrocket 配置 | iOS/iPadOS Shadowrocket 远程配置或本地导入 | 否，节点订阅需另加 | 推荐 |
@@ -60,10 +60,10 @@ https://<subconverter-host>/sub?target=clash&url=<private-subscription>&config=<
 `clash-multi-sub.ini` 使用 SubConverter-Extended 的远程 `proxy-provider` 能力，不适用于不支持 `provider:` 前缀和 `!!PROVIDER=` 的原版 subconverter。三个来源固定命名为：
 
 ```text
-provider:default,<DEFAULT_URL>|provider:premium,<PREMIUM_URL>|provider:budget,<BUDGET_URL>
+provider:sub-default,<DEFAULT_URL>|provider:sub-premium,<PREMIUM_URL>|provider:sub-budget,<BUDGET_URL>
 ```
 
-若 budget 订阅需要返回 Mihomo 格式，先把 `&flag=meta` 加在它自己的 URL 末尾，再对上面整段 `url` 参数进行一次 URL 编码。不要把 `tag:` 与此模板混用，也不要只编码各订阅地址后再手工拼接。
+Mihomo 将 `default` 保留为内置 provider 名称，因此不能直接使用 `provider:default`。若 budget 订阅需要返回 Mihomo 格式，先把 `&flag=meta` 加在它自己的 URL 末尾，再对上面整段 `url` 参数进行一次 URL 编码。不要把 `tag:` 与此模板混用，也不要只编码各订阅地址后再手工拼接。
 
 以 SubConverter-Extended 公共演示站为例，请求结构为：
 
