@@ -10,7 +10,7 @@ LadderTools 是一组面向 Clash/OpenClash、Stash 和 Shadowrocket 的分流�
 LadderTools/
 ├─ configs/
 │  ├─ clash.ini                  # 推荐：通用 subconverter 转换模板
-│  ├─ clash-multi-sub.ini        # 三订阅来源隔离的 subconverter 模板
+│  ├─ clash-multi-sub.ini        # 三订阅来源隔离的 Proxy-Provider 模板
 │  ├─ stash.yaml                 # Stash 私人订阅包装示例
 │  ├─ stash-policy.stoverride    # Stash 策略组及规则覆写
 │  └─ shadowrocket.conf          # Shadowrocket 完整公共配置
@@ -23,7 +23,7 @@ LadderTools/
 | 文件 | 类型 | 适用客户端/场景 | 是否含节点 | 推荐程度 |
 | --- | --- | --- | --- | --- |
 | `configs/clash.ini` | subconverter 模板 | 将私人订阅转换成 Clash/OpenClash 或 Stash YAML | 否，节点由转换请求的 `url` 传入 | 推荐 |
-| `configs/clash-multi-sub.ini` | 多订阅 subconverter 模板 | 使用 `default/premium/budget` 三个 tag 合并订阅，并按来源建立独立策略组 | 否，订阅由转换请求的 `url` 传入 | 推荐 |
+| `configs/clash-multi-sub.ini` | SubConverter-Extended 多订阅模板 | 使用 `default/premium/budget` 三个 provider 合并订阅，并按来源建立独立策略组 | 否，订阅由客户端根据生成的 `proxy-providers` 拉取 | 推荐 |
 | `configs/stash.yaml` | Stash 基础 YAML 示例 | 把一个私人订阅包装成 `proxy-provider`，再叠加覆写 | 否，仅含占位订阅 URL | 推荐给不使用订阅转换的 Stash 用户 |
 | `configs/stash-policy.stoverride` | Stash Override | 给已有 Stash 配置统一替换策略组、规则提供器和规则 | 否，复用原配置的 `proxies`/`proxy-providers` | 推荐 |
 | `configs/shadowrocket.conf` | Shadowrocket 配置 | iOS/iPadOS Shadowrocket 远程配置或本地导入 | 否，节点订阅需另加 | 推荐 |
@@ -54,6 +54,24 @@ https://<subconverter-host>/sub?target=clash&url=<private-subscription>&config=<
 将生成的订阅 URL 添加到 OpenClash，更新配置后检查策略组是否都有可用节点。`expand=true` 会把远程规则展开进最终配置，适合希望 OpenClash 获得一份自包含规则配置的场景。
 
 若转换服务由第三方运营，运营方理论上能够看到 `url` 参数中的订阅令牌。私人订阅优先使用自建转换服务。
+
+#### 多订阅 Proxy-Provider 模式
+
+`clash-multi-sub.ini` 使用 SubConverter-Extended 的远程 `proxy-provider` 能力，不适用于不支持 `provider:` 前缀和 `!!PROVIDER=` 的原版 subconverter。三个来源固定命名为：
+
+```text
+provider:default,<DEFAULT_URL>|provider:premium,<PREMIUM_URL>|provider:budget,<BUDGET_URL>
+```
+
+若 budget 订阅需要返回 Mihomo 格式，先把 `&flag=meta` 加在它自己的 URL 末尾，再对上面整段 `url` 参数进行一次 URL 编码。不要把 `tag:` 与此模板混用，也不要只编码各订阅地址后再手工拼接。
+
+以 SubConverter-Extended 公共演示站为例，请求结构为：
+
+```text
+https://api.asailor.org/sub?target=clash&url=<ENCODED_PROVIDER_URLS>&config=<ENCODED_CLASH_MULTI_SUB_INI_URL>&new_name=true&expand=false&classic=false
+```
+
+生成结果不会把远程节点写进顶层 `proxies`，而是生成三个 `proxy-providers`，由 OpenClash、Clash Verge Rev 或 Stash 更新配置时直接拉取。每个订阅应返回含顶层 `proxies` 的 Clash/Mihomo YAML；转换端的 `emoji`、`sort` 和节点重命名参数不会作用于 provider 内部节点。
 
 ### 方案 B：Stash 使用订阅转换
 
