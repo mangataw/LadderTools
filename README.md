@@ -11,6 +11,7 @@ LadderTools/
 ├─ configs/
 │  ├─ clash.ini                  # 推荐：通用 subconverter 转换模板
 │  ├─ clash-multi-sub.ini        # 三订阅来源隔离的 Proxy-Provider 模板
+│  ├─ clash-multi-group.ini      # 三订阅 tag/GROUP 内嵌节点模板
 │  ├─ stash.yaml                 # Stash 私人订阅包装示例
 │  ├─ stash-policy.stoverride    # Stash 策略组及规则覆写
 │  └─ shadowrocket.conf          # Shadowrocket 完整公共配置
@@ -24,6 +25,7 @@ LadderTools/
 | --- | --- | --- | --- | --- |
 | `configs/clash.ini` | subconverter 模板 | 将私人订阅转换成 Clash/OpenClash 或 Stash YAML | 否，节点由转换请求的 `url` 传入 | 推荐 |
 | `configs/clash-multi-sub.ini` | SubConverter-Extended 多订阅模板 | 使用 `subDefault/subPremium/subBudget` 三个 provider 合并订阅，并按来源建立独立策略组 | 否，订阅由客户端根据生成的 `proxy-providers` 拉取 | 推荐 |
+| `configs/clash-multi-group.ini` | 增强型 subconverter 多订阅模板 | 使用 `subDefault/subPremium/subBudget` 三个 tag 合并订阅，以 `!!GROUP` 隔离来源并内嵌节点 | 否，转换时由后端写入最终 YAML | 兼容备用 |
 | `configs/stash.yaml` | Stash 基础 YAML 示例 | 把一个私人订阅包装成 `proxy-provider`，再叠加覆写 | 否，仅含占位订阅 URL | 推荐给不使用订阅转换的 Stash 用户 |
 | `configs/stash-policy.stoverride` | Stash Override | 给已有 Stash 配置统一替换策略组、规则提供器和规则 | 否，复用原配置的 `proxies`/`proxy-providers` | 推荐 |
 | `configs/shadowrocket.conf` | Shadowrocket 配置 | iOS/iPadOS Shadowrocket 远程配置或本地导入 | 否，节点订阅需另加 | 推荐 |
@@ -72,6 +74,24 @@ https://api.asailor.org/sub?target=clash&url=<ENCODED_PROVIDER_URLS>&config=<ENC
 ```
 
 生成结果不会把远程节点写进顶层 `proxies`，而是生成三个 `proxy-providers`，由 OpenClash、Clash Verge Rev 或 Stash 更新配置时直接拉取。每个订阅应返回含顶层 `proxies` 的 Clash/Mihomo YAML；转换端的 `emoji`、`sort` 和节点重命名参数不会作用于 provider 内部节点。
+
+#### 多订阅 GROUP 内嵌模式
+
+`clash-multi-group.ini` 保留与 Provider 模板相同的规则集、策略组名称和顺序，但由转换后端拉取并解析节点。它要求后端同时支持 VLESS、`tag:` 和 `!!GROUP=`；已验证 `url.v1.mk` 可用，旧版 `subconverter v0.9.0` 不适合处理含 VLESS 的 budget 订阅。
+
+三个来源固定写成：
+
+```text
+tag:subDefault,<DEFAULT_URL>|tag:subPremium,<PREMIUM_URL>|tag:subBudget,<BUDGET_URL>
+```
+
+若 budget 需要 Meta 输出，先在其 URL 末尾加入 `&flag=meta`，再对上面整段进行一次 URL 编码。请求结构为：
+
+```text
+https://url.v1.mk/sub?target=clash&url=<ENCODED_TAGGED_URLS>&config=<ENCODED_CLASH_MULTI_GROUP_INI_URL>&new_name=true&emoji=true&sort=true&expand=false&classic=true
+```
+
+这种模式会把节点写进最终 YAML，因此转换端的 Emoji、排序和重命名可以生效，OpenClash、Clash Verge Rev 与 Stash 均可使用。不过第三方转换后端能够看到所有订阅地址；实测 budget 经 `url.v1.mk` 转换后为 18 个 VLESS 和 1 个 Trojan，比 Provider 直连上游少 1 个 Trojan。
 
 ### 方案 B：Stash 使用订阅转换
 
