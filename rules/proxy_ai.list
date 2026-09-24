@@ -21,3 +21,10 @@ DOMAIN-SUFFIX,googleapis.com
 
 # Manus
 DOMAIN-SUFFIX,manus.im
+
+#muse ai
+DOMAIN-SUFFIX,muse.ai
+DOMAIN-SUFFIX,meta.ai
+DOMAIN-SUFFIX,meta.com
+DOMAIN-SUFFIX,metaaivm.com
+
